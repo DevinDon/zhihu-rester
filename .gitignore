@@ -1,0 +1,12 @@
+/node_modules
+/dist
+/coverage
+/package-lock.json
+/yarn.lock
+/out
+/temp
+/log
+/rester.yaml
+/rester.local.yaml
+/*.db
+/**/*.log
