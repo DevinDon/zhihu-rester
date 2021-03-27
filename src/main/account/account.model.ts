@@ -27,3 +27,5 @@ export type AccountUpdateParams = AccountInsertParams;
 export type AccountSelectParams = Pick<Account, 'username' | 'password'>;
 
 export type AccountForeignKey = Pick<Account, 'username'> & { _id: AccountID };
+
+export type AuthAccountInZone = { account: Account & { _id: AccountID } };

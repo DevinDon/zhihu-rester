@@ -1,6 +1,6 @@
 import { BaseView, cleanify, DELETE, ExistResponse, GET, Handler, HandlerZone, HTTP403Exception, PathVariable, POST, PUT, RequestBody, requiredAtLeastOneParam, requiredParams, ResterResponse, View } from '@rester/core';
 import { getEntity } from '@rester/orm';
-import { Account, AccountID } from '../account/account.model';
+import { AuthAccountInZone } from '../account/account.model';
 import { UserAuthHandler } from '../common/handlers';
 import { QuestionCollection, QuestionEntity } from './question.entity';
 import { QuestionID, QuestionInsertParams, QuestionUpdateParams } from './question.model';
@@ -22,7 +22,7 @@ export class QuestionView extends BaseView {
   @POST()
   async create(
     @RequestBody() { title, content, tags = [] }: QuestionInsertParams,
-    @HandlerZone() { account: { _id, username } }: { account: Account & { _id: AccountID } },
+    @HandlerZone() { account: { _id, username } }: AuthAccountInZone,
   ) {
     requiredParams(title);
     return new ResterResponse({
@@ -47,7 +47,7 @@ export class QuestionView extends BaseView {
   @Handler(UserAuthHandler)
   async remove(
     @PathVariable('id') questionID: QuestionID,
-    @HandlerZone() { account: { _id: accountID } }: { account: Account & { _id: AccountID } },
+    @HandlerZone() { account: { _id: accountID } }: AuthAccountInZone,
   ) {
     requiredParams(questionID, accountID);
     const accountIDInQuestion = await this.entity.findOne(questionID)
@@ -63,7 +63,7 @@ export class QuestionView extends BaseView {
   async modify(
     @PathVariable('id') questionID: QuestionID,
     @RequestBody() { title, content, tags }: QuestionUpdateParams,
-    @HandlerZone() { account: { _id: accountID } }: { account: Account & { _id: AccountID } },
+    @HandlerZone() { account: { _id: accountID } }: AuthAccountInZone,
   ) {
     requiredParams(questionID, accountID);
     requiredAtLeastOneParam(title, content, tags);

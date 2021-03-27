@@ -2,7 +2,7 @@ import { BaseView, ExistResponse, generateID, Handler, HandlerZone, POST, Reques
 import { getEntity } from '@rester/orm';
 import { UserAuthHandler } from '../common/handlers';
 import { AccountCollection, AccountEntity } from './account.entity';
-import { Account, AccountInsertParams, AccountSelectParams, Role } from './account.model';
+import { AccountInsertParams, AccountSelectParams, AuthAccountInZone, Role } from './account.model';
 
 // create, remove, modify, take, search
 // one, more
@@ -51,7 +51,7 @@ export class AccountView extends BaseView {
   @Handler(UserAuthHandler)
   @POST('signout')
   async signout(
-    @HandlerZone() { account: { username } }: { account: Account },
+    @HandlerZone() { account: { username } }: AuthAccountInZone,
   ) {
     return new ExistResponse({
       data: await this.entity.clearToken({ username }),
