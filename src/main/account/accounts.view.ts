@@ -1,5 +1,6 @@
-import { BaseView, GET, PathQuery, View } from '@rester/core';
+import { BaseView, GET, Handler, PathQuery, View } from '@rester/core';
 import { getEntity, Pagination } from '@rester/orm';
+import { AdminAuthHandler } from '../common/handlers';
 import { AccountCollection, AccountEntity } from './account.entity';
 
 // create, remove, modify, take, search
@@ -17,6 +18,7 @@ export class AccountsView extends BaseView {
   }
 
   @GET()
+  @Handler(AdminAuthHandler)
   async take(
     @PathQuery('from') from: string = '000000000000000000000000',
     @PathQuery('take') take: number = 10,
