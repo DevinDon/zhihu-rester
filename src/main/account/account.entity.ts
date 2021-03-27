@@ -32,6 +32,12 @@ export class AccountEntity extends MongoEntity<Account> implements Account {
   @Column()
   role!: Role;
 
+  async alreadyHasUsernameOrEmail({ username, email }: Pick<Account, 'username' | 'email'>) {
+    const hasUsername = await this.collection.findOne({ username });
+    const hasEmail = await this.collection.findOne({ email });
+    return !!hasUsername || !!hasEmail;
+  }
+
   async selectOneByUsernameAndPassword({ username, password }: AccountSelectParams) {
     const result = await this.collection
       .findOneAndUpdate({ username, password }, { $set: { token: generateID() } });

@@ -1,4 +1,4 @@
-import { BaseView, ExistResponse, generateID, Handler, HandlerZone, POST, RequestBody, requiredParams, View } from '@rester/core';
+import { BaseView, ExistResponse, generateID, Handler, HandlerZone, HTTP400Exception, POST, RequestBody, requiredParams, View } from '@rester/core';
 import { getEntity } from '@rester/orm';
 import { UserAuthHandler } from '../common/handlers';
 import { AccountCollection, AccountEntity } from './account.entity';
@@ -34,6 +34,9 @@ export class AccountView extends BaseView {
     @RequestBody() { email, password, username = generateID(), birthdate }: AccountInsertParams,
   ) {
     requiredParams(email, password);
+    if (await this.entity.alreadyHasUsernameOrEmail({ username, email })) {
+      throw new HTTP400Exception(`Username '${username}' or email '${email}' has been registered.`);
+    }
     return new ExistResponse({
       data: await this.entity.insertOne({
         email,
@@ -41,6 +44,7 @@ export class AccountView extends BaseView {
         username,
         birthdate,
         role: Role.NORMAL,
+        token: generateID(),
         createdAt: new Date(),
         updatedAt: new Date(),
       }),
