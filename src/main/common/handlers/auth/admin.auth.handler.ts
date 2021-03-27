@@ -1,8 +1,9 @@
-import { BaseHandler, HTTP401Exception, parseTokenFromRequest } from '@rester/core';
+import { BaseHandler, HTTP403Exception, parseTokenFromRequest } from '@rester/core';
 import { getEntity } from '@rester/orm';
 import { AccountEntity } from '../../../account/account.entity';
+import { Role } from '../../../account/account.model';
 
-export class UserAuthHandler extends BaseHandler {
+export class AdminAuthHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
 
@@ -12,9 +13,9 @@ export class UserAuthHandler extends BaseHandler {
 
     const entity: AccountEntity = getEntity(AccountEntity);
     const token = parseTokenFromRequest(this.request);
-    const account = await entity.collection.findOne({ token });
+    const account = await entity.collection.findOne({ token, role: Role.ADMIN });
     if (!account) {
-      throw new HTTP401Exception(`Invalid token ${token}`);
+      throw new HTTP403Exception(`Forbidden token ${token}`);
     }
     this.zone.account = account;
 
