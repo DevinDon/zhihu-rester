@@ -31,7 +31,7 @@ export class AnswerView extends BaseView {
     requiredParams(questionID, content, accountID, username);
     const question = await this.questionEntity.findOne(questionID);
     if (!question) {
-      throw new HTTP400Exception(`Question ${questionID} does not exist.`);
+      throw new HTTP400Exception(`Question '${questionID}' does not exist.`);
     }
     return new ResterResponse({
       statusCode: 201,

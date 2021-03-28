@@ -20,6 +20,7 @@ export class QuestionView extends BaseView {
   }
 
   @POST()
+  @Handler(UserAuthHandler)
   async create(
     @RequestBody() { title, content, tags = [] }: QuestionInsertParams,
     @HandlerZone() { account: { _id, username } }: AuthAccountInZone,

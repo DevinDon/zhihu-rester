@@ -1,4 +1,6 @@
 import { AccountForeignKey } from '../account/account.model';
+import { CommentForeignKey } from '../comment/comment.model';
+import { BaseForeignKey } from '../common/interfaces';
 import { QuestionForeignKey } from '../question/question.model';
 
 export interface Answer {
@@ -20,7 +22,7 @@ export interface Answer {
   };
 
   /** 评论 */
-  comments: string[];
+  comments: CommentForeignKey[];
 
   createdAt: Date;
   updatedAt: Date;
@@ -32,3 +34,5 @@ export type AnswerID = string;
 export type AnswerInsertParams = Pick<Answer, 'account' | 'question' | 'content'>;
 
 export type AnswerUpdateParams = Partial<Pick<Answer, 'content'>>;
+
+export type AnswerForeignKey = BaseForeignKey;

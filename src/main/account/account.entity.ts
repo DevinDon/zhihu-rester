@@ -1,6 +1,5 @@
-import { generateID } from '@rester/core';
 import { Column, Entity, MongoEntity, ObjectID, PaginationParam } from '@rester/orm';
-import { Account, AccountID, AccountSelectParams, Role } from './account.model';
+import { Account, AccountID, Role } from './account.model';
 
 @Entity({ name: 'account' })
 export class AccountEntity extends MongoEntity<Account> implements Account {
@@ -38,10 +37,10 @@ export class AccountEntity extends MongoEntity<Account> implements Account {
     return !!hasUsername || !!hasEmail;
   }
 
-  async selectOneByUsernameAndPassword({ username, password }: AccountSelectParams) {
+  async selectOneByUsernameAndPassword({ username, password, token }: Pick<Account, 'username' | 'password' | 'token'>) {
     const result = await this.collection
-      .findOneAndUpdate({ username, password }, { $set: { token: generateID() } });
-    return result.value;
+      .findOneAndUpdate({ username, password }, { $set: { token } });
+    return this.collection.findOne({ token });
   }
 
   async clearToken({ username }: Pick<Account, 'username'>) {

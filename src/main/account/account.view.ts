@@ -24,7 +24,7 @@ export class AccountView extends BaseView {
   ) {
     requiredParams(username, password);
     return new ExistResponse({
-      data: await this.entity.selectOneByUsernameAndPassword({ username, password }),
+      data: await this.entity.selectOneByUsernameAndPassword({ username, password, token: generateID() }),
       fields: ['username', 'token'],
     });
   }

@@ -1,5 +1,6 @@
 import { Column, Entity, MongoEntity, ObjectID, PaginationParam } from '@rester/orm';
 import { AccountForeignKey } from '../account/account.model';
+import { CommentForeignKey, CommentID } from '../comment/comment.model';
 import { QuestionForeignKey } from '../question/question.model';
 import { Answer, AnswerID } from './answer.model';
 
@@ -22,13 +23,17 @@ export class AnswerEntity extends MongoEntity<Answer> implements Answer {
   count!: { approve: number; oppose: number; comment: number; };
 
   @Column()
-  comments!: string[];
+  comments!: CommentForeignKey[];
 
   @Column()
   createdAt!: Date;
 
   @Column()
   updatedAt!: Date;
+
+  async addComment(answerID: AnswerID, commentID: CommentID) {
+    return this.collection.updateOne({ _id: new ObjectID(answerID) }, { $push: { comments: { _id: commentID } } });
+  }
 
   async getRandomList({ take }: Pick<PaginationParam, 'take'>) {
     return { list: await this.collection.aggregate([{ $sample: { size: take } }]).toArray() };
