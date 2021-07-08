@@ -37,7 +37,7 @@
   "private": true,
   "dependencies": {
     "@rester/core": "0.15.6",
-    "@rester/logger": "0.1.0",
+    "@rester/logger": "0.2.2",
     "@rester/orm": "0.1.6",
     "class-validator": "0.13.1",
     "mongodb": "3.6.5"
